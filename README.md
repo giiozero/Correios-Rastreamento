@@ -11,73 +11,37 @@ O único intuito aqui é apresentar de forma simples o
 funcionamento da API fornecida pelos correios e dar uma solução 
 para as pessoas que enfrentam problemas ao usar a API XML antiga.
 
-## Como usar
-Comece adicionando a classe ao seu script PHP e defina os parametros usados.
+## Como usar (Todos os Scripts abaixo podem ser encontrados no arquivo exemplo-01.php)
+Comece adicionando a classe ao seu script PHP (require), defina os parametros usados ($_params) e inicie o objeto (::init).
 ```php
-require_once 'rastrear.class.php' ;
+require_once 'AjustarCaminho/rastrear.class.php';
 
-// parametros 
+// parametros (Alterar "user" e "pass" caso tenha contrato com Correios - consultar manual do Correios caso queira saber das outras questões)
 $_params = array( 'user' => 'ECT', 'pass' => 'SRO', 'tipo' => 'L', 'resultado' => 'T', 'idioma' => 101 );
 
 // iniciando objeto
 Rastrear::init( $_params );
 ```
 
-Consulte o manual para entender todos os parametros.
+Reforçando: Consulte o manual para entender todos os parametros ('L', 'T', etc).
 
 ### Realizando um rastreamento
 ```php
-$obj = Rastrear::get( 'PE012345678BR' );
-if(isset($obj->erro))
-    die( $obj->erro );
-
-// Visualizando dados basicos do objeto
-echo "NUMERO: "    . $obj -> numero . "<br>" ;
-echo "SIGLA: "     . $obj -> sigla . "<br>" ;
-echo "NOME: "      . $obj -> nome . "<br>" ;
-echo "CATEGORIA: " . $obj -> categoria . "<br>" ;
-```
+$obj = Rastrear::get( 'PE012345678BR' ); //Alterar ou definir variável que receba o código do Correios
+// Obter resultados
+``` 
 
 ### Visualizando eventos do Objeto
-Note que as informações sobre "Detalhes" e "Destino" nem sempre são retornados. Portanto, é importante verificar se os mesmos estão definidos antes de usálos.
-```php
-// CORREÇÂO: Caso objeto rastreado possua apenas 1 evento, 
-// Correios retorna o evento dentro de um Object e não um Array.
-if( is_object($obj->evento) ):
-    $tmp = Array();
-    $tmp[] = $obj->evento ;
-    $obj->evento = $tmp;
-endif;
-
-foreach( $obj -> evento as $ev ):
-
-    echo "TIPO: "   . $ev -> tipo   . "<br>" ;
-    echo "STATUS: " . $ev -> status . "<br>" ;
-    echo "DATA: "   . $ev -> data   . "<br>" ;
-    echo "HORA: "   . $ev -> hora   . "<br>" ;
-    echo "DESCRICAO: " . $ev -> descricao . "<br>" ;
-    if( isset( $ev -> detalhe ) ) 
-        echo "DETALHE: " . $ev -> detalhe . "<br>" ;
-    echo "LOCAL: "  . $ev -> local  . "<br>" ;
-    echo "CODIGO: " . $ev -> codigo . "<br>" ;
-    echo "CIDADE: " . $ev -> cidade . "<br>" ;
-    echo "UF: "     . $ev -> uf     . "<br>" ;
-
-    if( isset( $ev -> destino ) ):
-        echo " DESTINO (LOCAL): "  . $ev -> destino -> local . "<br>" ;
-        echo " DESTINO (CODIGO): " . $ev -> destino -> codigo . "<br>" ;
-        echo " DESTINO (CIDADE): " . $ev -> destino -> cidade . "<br>" ;
-        echo " DESTINO (BAIRRO): " . $ev -> destino -> bairro . "<br>" ;
-        echo " DESTINO (UF): "     . $ev -> destino -> uf . "<br>" ;
-    endif;
-
-    echo "<hr>";
-
-endforeach;
+Os dados retornados estão dentro do objeto "$obj" que foi populado acima. Basta obter os resultados - exemplo: 
+```# Visualizando dados basicos do objeto
+echo "NUMERO: "    . $obj -> numero . "<br>" ;
+// .... 
 ```
+Obs: Tomar cuidado com alguns resultados que nem sempre são retornados (citados no script exemplo-01.php)
 
 ### Autor
 Autor: Wanderlei Santana <sans.pds@gmail.com>
-site: http://sooho.com.br
-Data: 2016.08.22 00:13h
+Alterações por: Giiozero
+site (Autor): http://sooho.com.br
+Data de Criação: 2016.08.22 00:13h
 Copyleft 2015
